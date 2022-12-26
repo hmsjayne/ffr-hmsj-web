@@ -1,0 +1,83 @@
+
+
+<!doctype html>
+<html itemscope="" itemtype="http://schema.org/WebPage" lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Final Fantasy Randomizer: HMS Jayne</title>
+        <script type="text/javascript" src="site.js" defer></script>
+        <link rel="stylesheet" type="text/css" href="site.css">
+    </head>
+    <body>
+        <h1>
+            Final Fantasy Randomizer: HMS Jayne
+        </h1>
+        <img class="logo" src="hmslogo.jpg"/>
+        <div id="links">
+            <a href="https://github.com/hmsjayne/ffr-hmsj/issues">
+            <img src="github.png"/>
+            Report an issue
+            </a>
+            <br/>
+            <a id="discord" href="https://discord.gg/kPxkH5W">
+            <img src="discord.png"/>
+            Join the community
+            </a>
+        </div>
+        <form method="post" enctype="multipart/form-data" action="patch">
+            <div>
+                <h2>
+                    Select a <i>Final Fantasy I & II: Dawn of Souls</i> ROM to randomize:
+                </h2>
+                <label>
+                Upload ROM:
+                <input id="rom-file" name="rom" type="file" accept=".gba" style="display: none;" onchange="updateRom()">
+                <input id="rom-button" type="button" value="Select ROM" onclick="document.getElementById('rom-file').click()">
+                </label>
+                <div id="gen-box">
+                    <input id="gen" type="button" value="Generate ROM" onclick="randomize()">
+                </div>
+            </div>
+            <div>
+                <h2>
+                    Optionally, enter a seed value:
+                </h2>
+                <label>
+                    Seed:
+                    <input id="rom-seed" name="seed" type="text" maxlength="10" onchange="updateHash()">
+                    <input id="random-seed" type="button" value="New seed" onclick="newSeed()">
+                    <p>
+                        Seeds may be up to 10 ASCII characters long.
+                    </p>
+                </label>
+            </div>
+            <div>
+                <h2>
+                    Select options for the randomized ROM:
+                </h2>
+
+                  <label>Exp Scale:
+                    <input id="exp-scale" type="range" min="50" max="500" value="150" step="10" class="flag slider">
+                  </label>
+                <p id="exp-scale-p">Level-up x% of normal</p>
+                <div id="flags">
+                  <label>Use original progression: <input id="original-progression" type="checkbox" class="flag"/></label>
+                  <p>Do not shuffle key items to keep the general flow of the game "vanilla".</p>
+
+                  <label>Standard Shops: <input id="standard-shops" type="checkbox" class="flag"/></label>
+                  <p>Do not change the inventory of item, weapon, armor, or magic shops.</p>
+
+                  <label>Standard Treasure: <input id="standard-treasure" type="checkbox" class="flag"/></label>
+                  <p>Do not change the contents of treasure chests.</p>
+
+                  <label>Default starting gear: <input id="default-start-gear" type="checkbox" class="flag"/></label>
+                  <p>Do not generate random starting gear.</p>
+				  
+				  <label>Default Fiend fights: <input id="default-boss-fights" type="checkbox" class="flag"/></label>
+                  <p>Do not randomize the Fiend fights.</p>
+                </div>
+            </div>
+        </form>
+    </body>
+</html>
+
