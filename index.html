@@ -1,0 +1,65 @@
+
+
+<!doctype html>
+<html itemscope="" itemtype="http://schema.org/WebPage" lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Final Fantasy Randomizer: HMS Jayne</title>
+        <script type="text/javascript" src="/static/site.js" defer></script>
+        <link rel="stylesheet" type="text/css" href="/static/site.css">
+    </head>
+    <body>
+        <h1>
+            Final Fantasy Randomizer: HMS Jayne
+        </h1>
+        <img class="logo" src="/static/hmslogo.jpg"/>
+        <div id="links">
+            <a href="https://github.com/hmsjayne/ffr-hmsj/issues">
+            <img src="/static/github.png"/>
+            Report an issue
+            </a>
+            <br/>
+            <a id="discord" href="https://discord.gg/kPxkH5W">
+            <img src="/static/discord.png"/>
+            Join the community
+            </a>
+        </div>
+        <form method="post" enctype="multipart/form-data" action="patch">
+            <div>
+                <h2>
+                    Select a <i>Final Fantasy I & II: Dawn of Souls</i> ROM to randomize:
+                </h2>
+                <label>
+                Select ROM:
+                <input id="rom-file" name="rom" type="file" accept=".gba" style="display: none;" onchange="updateRom()">
+                <input id="rom-button" type="button" value="Selected ROM" onclick="document.getElementById('rom-file').click()">
+                </label>
+                <br/>
+                <label>
+                Select Challenge:
+                <select name="challenge">
+                    <option value="KSTGB6_2423f880">KSTGB6, 2423f880</option>
+                    <option value="KSTGB6_3a3fed52">KSTGB6, 3a3fed52</option>
+                    <option value="KSTGB6_45eea99e">KSTGB6, 45eea99e</option>
+                    <option value="KSTGB6_4f46790a">KSTGB6, 4f46790a</option>
+                    <option value="KSTGB6_6d3c09ee">KSTGB6, 6d3c09ee</option>
+                    <option value="KSTGB6_77735029">KSTGB6, 77735029</option>
+                    <option value="KSTGB6_88070f7f">KSTGB6, 88070f7f</option>
+                    <option value="KSTGB6_b630ad09">KSTGB6, b630ad09</option>
+                    <option value="KSTGB6_d6bbdab7">KSTGB6, d6bbdab7</option>
+                    <option value="KSTGB6_e7729103">KSTGB6, e7729103</option>
+                </select>
+                </label>
+                <div id="gen-box">
+                    <input id="gen" type="button" value="Generate ROM" onclick="randomize()">
+                </div>
+            </div>
+        </form>
+        <div id="havingFun">
+            Enjoyed the seed and want more control over the options? Grab the code from
+            <a href="https://github.com/hmsjayne/ffr-hmsj/">GitHub</a> or
+            join our community and submit a request for a new seed!
+        </div>
+    </body>
+</html>
+

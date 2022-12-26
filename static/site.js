@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+let flags = "";
+let seed = "";
+
 function getFilename() {
     var fullPath = document.getElementById('rom-file').value;
     if (fullPath) {
@@ -33,7 +36,7 @@ function updateRom() {
         document.getElementById("rom-button").value = filename;
         loadRom();
     } else {
-        document.getElementById("rom-button").value = "Select ROM"
+        document.getElementById("rom-button").value = "Selected ROM"
     }
 }
 
@@ -44,6 +47,7 @@ function loadRom() {
         romData = new Uint8Array(reader.result.slice(0));
     };
     reader.readAsArrayBuffer(file);
+    romName = filename;
 }
 
 function randomize() {
@@ -52,10 +56,13 @@ function randomize() {
         return;
     }
 
-    updateHash()
+    const patchName = document.getElementsByName("challenge")[0].value;
+    const parts = patchName.split("_", 2)
+    flags = parts[0]
+    seed = parts[1]
 
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", '/patch', true);
+    xhr.open("GET", '/patches/patch_' + patchName + ".ips", true);
 
     //Send the proper header information along with the request
     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -66,10 +73,7 @@ function randomize() {
             applyPatch(xhr.response)
         }
     }
-
-    formData = window.location.hash.substring(1)
-    console.log(formData);
-    xhr.send(formData);
+    xhr.send();
 }
 
 function applyPatch(patchBuffer) {
@@ -89,6 +93,10 @@ async function applyPatchAsync(ipsData) {
         }
         patch = ipsData.nextPatch();
     }
+
+    baseFile = getFilename().replace(".gba", "")
+    romName = (baseFile + "_" + flags + "_" + seed + ".gba").replace(/ /g, "-")
+    console.log("output name: " + romName)
     saveData(patchedRom, romName);
 }
 
@@ -173,73 +181,3 @@ const saveData = (function() {
     };
 }());
 
-function newSeed() {
-    var seed = Math.floor(Math.random() * 0xffffffff).toString(16);
-    document.getElementById("rom-seed").value = seed
-    updateHash()
-}
-
-function updateHash() {
-    var seed = document.getElementById("rom-seed").value
-    if (seed == "") {
-        seed = Math.floor(Math.random() * 0xffffffff).toString(16);
-        document.getElementById("rom-seed").value = seed
-    }
-
-    var originalProgression = document.getElementById("original-progression").checked
-    var standardShops = document.getElementById("standard-shops").checked
-    var standardTreasure = document.getElementById("standard-treasure").checked
-    var defaultGear = document.getElementById("default-start-gear").checked
-    var defaultBosses = document.getElementById("default-boss-fights").checked
-    var levelScale = document.getElementById("exp-scale").value
-
-    var flags = originalProgression ? "Op" : "";
-    flags += standardShops ? "Sv" : "";
-    flags += standardTreasure ? "Tv" : "";
-    flags += defaultGear ? "Gv" : "";
-    flags += defaultBosses ? "B" : "";
-    flags += "Xp" + (levelScale / 10)
-
-    baseFile = getFilename().replace(".gba", "")
-    romName = (baseFile + "_" + flags + "_" + seed + ".gba").replace(/ /g, "-")
-    window.location.hash = "#seed=" + seed + "&flags=" + flags
-}
-
-function updateForms() {
-    hashParts = window.location.hash.substring(1).split("&")
-    for (var i = 0; i < hashParts.length; ++i) {
-        var part = hashParts[i]
-
-        if (part.indexOf("seed=") == 0) {
-            var seed = part.substring(5)
-            document.getElementById("rom-seed").value = decodeURI(seed)
-        } else if (part.indexOf("flags=") == 0) {
-            document.getElementById("original-progression").checked = part.indexOf("Op") >= 0
-            document.getElementById("standard-shops").checked = part.indexOf("Sv") >= 0
-            document.getElementById("standard-treasure").checked = part.indexOf("Tv") >= 0
-            document.getElementById("default-start-gear").checked = part.indexOf("Gv") >= 0
-            document.getElementById("default-boss-fights").checked = part.indexOf("B") >= 0
-
-            if (part.indexOf("Xp") >= 0) {
-                scale = parseInt(part.substring(part.indexOf("Xp") + 2)) * 10
-                document.getElementById("exp-scale").value = scale
-                document.getElementById("exp-scale-p").innerText = "Level-up " + (scale) + "% of normal"
-            }
-        }
-    }
-}
-
-window.onhashchange = function() {
-    updateForms()
-}
-
-window.onload = function() {
-    var flags = document.getElementsByClassName("flag")
-    for (var i = 0; i < flags.length; ++i) {
-        flags[i].addEventListener("change", updateHash)
-    }
-    document.getElementById("exp-scale").addEventListener("input", updateHash)
-
-    updateForms()
-    updateHash()
-}
